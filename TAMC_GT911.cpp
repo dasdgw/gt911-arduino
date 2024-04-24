@@ -70,6 +70,12 @@ void TAMC_GT911::read(void) {
   uint8_t bufferStatus = pointInfo >> 7 & 1;
   uint8_t proximityValid = pointInfo >> 5 & 1;
   uint8_t haveKey = pointInfo >> 4 & 1;
+
+  // GT911 Programming Guide_v0.1-1.pdf p26
+  // If it is found out in step 1 that data in buffer is not ready (buffer status: 0), it will read again 1ms later.
+  if (!bufferStatus)
+    return;
+
   isLargeDetect = pointInfo >> 6 & 1;
   touches = pointInfo & 0xF;
   // Serial.print("bufferStatus: ");Serial.println(bufferStatus);
